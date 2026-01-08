@@ -1,68 +1,58 @@
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.*;
- 
- 
-public class Main {
-	
-	public static int N,M;
-	public static int[] arr;
-	public static Node[] node;
-	public static StringBuilder sb = new StringBuilder();
-	
-    public static void main(String[] args) throws IOException{
-    	BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-    	
-    	StringTokenizer st = new StringTokenizer(br.readLine());
-    	N = Integer.parseInt(st.nextToken());
-    	M = Integer.parseInt(st.nextToken());
-    	node = new Node[N];
-    	
-    	for(int i=0;i<N;i++) {
-    		st = new StringTokenizer(br.readLine());
-    		String a = st.nextToken();
-    		int b = Integer.parseInt(st.nextToken());
-    		node[i] = new Node(a, b);
-    	}
-    	
-    	arr = new int[M];
-    	for(int i=0;i<M;i++) {
-    		st = new StringTokenizer(br.readLine());
-    		int a = Integer.parseInt(st.nextToken());
-    		arr[i] = a;
-    	}
-    	
-    	for(int i=0;i<M;i++) {
-        	binarySearch(arr[i]); 
-    	}
-    	
-    	System.out.println(sb);
- 
+import java.io.OutputStreamWriter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.StringTokenizer;
+
+class Main {
+    public static void main(String[] args) throws IOException {
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(System.out));
+        StringTokenizer stringTokenizer = new StringTokenizer(bufferedReader.readLine());
+        int n = Integer.parseInt(stringTokenizer.nextToken());
+        int d = Integer.parseInt(stringTokenizer.nextToken());
+
+        List<Standard> standards = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            stringTokenizer = new StringTokenizer(bufferedReader.readLine());
+            standards.add(new Standard(stringTokenizer.nextToken(), Integer.parseInt(stringTokenizer.nextToken())));
+        }
+
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0; i < d; i++) {
+            int power = Integer.parseInt(bufferedReader.readLine());
+            int index = binarySearch(standards, power);
+            stringBuilder.append(standards.get(index).name).append("\n");
+        }
+        bufferedWriter.write(stringBuilder.toString());
+        bufferedWriter.flush();
     }
-    
-    public static void binarySearch(int target) {
-    	int start = 0;
-    	int end = N-1;    	
-    	while(start<=end) {
-    		int middle = (start + end) / 2;
-    		if( node[middle].fightScore >= target) { 
-    			end = middle - 1;
-    		}else {
-    			start = middle + 1;
-    		}
-    	}
-        
-    	sb.append(node[end+1].name).append('\n');
+
+    private static int binarySearch(List<Standard> standards, int power) {
+        int left = 0;
+        int right = standards.size() - 1;
+        while (left < right) {
+            int mid = (left + right) / 2;
+            int limit = standards.get(mid).limit;
+            if (power <= limit) {
+                right = mid;
+            } else {
+                left = mid + 1;
+            }
+        }
+        return left;
     }
-}
- 
- 
-class Node{
-	String name;
-	int fightScore;
-	public Node(String name, int fightScore) {
-		this.name = name;
-		this.fightScore = fightScore;
-	}
+
+    private static class Standard {
+        String name;
+        int limit;
+
+        public Standard(String name, int limit) {
+            this.name = name;
+            this.limit = limit;
+        }
+    }
 }
