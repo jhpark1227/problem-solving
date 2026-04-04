@@ -1,9 +1,8 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayDeque;
 import java.util.Arrays;
-import java.util.Deque;
+import java.util.PriorityQueue;
 import java.util.StringTokenizer;
 
 class Main {
@@ -47,35 +46,41 @@ class Main {
                 }
             }
         }
-        System.out.print(bfs(zones));
+        System.out.println(dijkstra(zones));
     }
 
-    private static int bfs(Zone[][] zones) {
-        Deque<Node> deque = new ArrayDeque<>();
-        deque.add(new Node(0, 0, 0));
-        int[] dy = {0, 0, 1, -1};
+    private static int dijkstra(Zone[][] zones) {
+        PriorityQueue<Node> priorityQueue = new PriorityQueue<>((a, b) -> a.depth - b.depth);
+        priorityQueue.add(new Node(0, 0, 0));
+        int[] dy = {0, 0, -1, 1};
         int[] dx = {1, -1, 0, 0};
-        boolean[][] isVisited = new boolean[501][501];
-        while (!deque.isEmpty()) {
-            Node now = deque.pollFirst();
+        int[][] dist = new int[501][501];
+        for (int[] ints : dist) {
+            Arrays.fill(ints, 500000000);
+        }
+        while (!priorityQueue.isEmpty()) {
+            Node now = priorityQueue.poll();
             if (now.y == 500 && now.x == 500) {
                 return now.depth;
             }
             for (int i = 0; i < dy.length; i++) {
                 int newY = now.y + dy[i];
                 int newX = now.x + dx[i];
-                if (newY < 0 || newX < 0 || newY > 500 || newX > 500 || isVisited[newY][newX]) {
-                    continue;
-                }
-                if (zones[newY][newX] == Zone.DEATH) {
+                if (newY < 0 || newX < 0 || newY > 500 || newX > 500 || zones[newY][newX] == Zone.DEATH) {
                     continue;
                 }
                 if (zones[newY][newX] == Zone.DANGER) {
-                    deque.addLast(new Node(newY, newX, now.depth + 1));
-                    isVisited[newY][newX] = true;
+                    if (dist[newY][newX] <= now.depth + 1) {
+                        continue;
+                    }
+                    priorityQueue.add(new Node(newY, newX, now.depth + 1));
+                    dist[newY][newX] = now.depth + 1;
                 } else {
-                    deque.addFirst(new Node(newY, newX, now.depth));
-                    isVisited[newY][newX] = true;
+                    if (dist[newY][newX] <= now.depth) {
+                        continue;
+                    }
+                    priorityQueue.add(new Node(newY, newX, now.depth));
+                    dist[newY][newX] = now.depth;
                 }
             }
         }
