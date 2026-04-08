@@ -8,8 +8,8 @@ class Main {
     private static int n;
     private static boolean[][] canMove;
     private static boolean[][] isVisited;
-    private static int[] dy = {1, -1, 1, -1};
-    private static int[] dx = {1, -1, -1, 1};
+    private static int[] dy = {-1, -1};
+    private static int[] dx = {-1, 1};
     private static int black = 0;
     private static int white = 0;
 
