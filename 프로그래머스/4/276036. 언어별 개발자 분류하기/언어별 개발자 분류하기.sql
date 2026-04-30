@@ -1,34 +1,35 @@
-WITH front_developer AS (SELECT *
-FROM DEVELOPERS AS D
-JOIN (SELECT CODE FROM SKILLCODES WHERE CATEGORY = 'Front End') AS S
-ON D.SKILL_CODE & S.CODE)
-,c_developer AS (SELECT *
-FROM DEVELOPERS AS D
-JOIN (SELECT CODE FROM SKILLCODES WHERE NAME = 'C#') AS S
-ON D.SKILL_CODE & S.CODE)
-,python_developer AS (SELECT *
-FROM DEVELOPERS AS D
-JOIN (SELECT CODE FROM SKILLCODES WHERE NAME = 'Python') AS S
-ON D.SKILL_CODE & S.CODE)
+WITH csharp_developers AS
+(SELECT d.*
+FROM developers AS d
+JOIN (SELECT code FROM skillcodes WHERE name = 'C#') AS sc
+ON sc.code & d.skill_code),
+python_developers AS
+(SELECT d.*
+FROM developers AS d
+JOIN (SELECT code FROM skillcodes WHERE name = 'Python') AS sc
+ON sc.code & d.skill_code),
+front_developers AS
+(SELECT d.*
+FROM developers AS d
+JOIN (SELECT CODE FROM SKILLCODES WHERE CATEGORY = 'Front End') AS SC
+ON SC.CODE & D.SKILL_CODE)
 
-SELECT *
-FROM (SELECT 
-    CASE
+SELECT 
+    (CASE
         WHEN (
-            ID IN (SELECT ID FROM front_developer)
-            AND ID IN (SELECT ID FROM python_developer)
+            id IN (SELECT id FROM front_developers)
+              AND id IN (SELECT id FROM python_developers)
         )
         THEN 'A'
-        WHEN (
-            ID IN (SELECT ID FROM c_developer)
-        )
+        WHEN (id IN (SELECT id FROM csharp_developers))
         THEN 'B'
-        WHEN (
-            ID IN (SELECT ID FROM front_developer)
-        )
+        WHEN (id IN (SELECT id FROM front_developers))
         THEN 'C'
-        ELSE 'D'
-    END AS GRADE, ID, EMAIL
-FROM DEVELOPERS
-ORDER BY GRADE, ID) AS RESULT
-WHERE RESULT.GRADE != 'D'
+        ELSE 'E'
+    END) 'GRADE',
+    ID,
+    EMAIL
+FROM developers
+WHERE id IN (SELECT id FROM front_developers)
+              OR id IN (SELECT id FROM csharp_developers)
+ORDER BY 1, 2
