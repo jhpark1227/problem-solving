@@ -1,3 +1,7 @@
-SELECT COUNT(*) AS COUNT
-FROM ECOLI_DATA AS E
-WHERE (E.GENOTYPE & 4 OR E.GENOTYPE & 1 OR E.GENOTYPE & 5) AND (NOT E.GENOTYPE & 2)
+SELECT COUNT(*) 'COUNT'
+FROM ecoli_data
+WHERE 
+genotype & 2 = 0
+AND (genotype & 5 = 1
+OR genotype & 5 = 4
+OR genotype & 5 = 5)
