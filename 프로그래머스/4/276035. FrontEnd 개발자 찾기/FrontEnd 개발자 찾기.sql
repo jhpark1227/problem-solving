@@ -1,9 +1,7 @@
 SELECT DISTINCT ID, EMAIL, FIRST_NAME, LAST_NAME
-FROM DEVELOPERS AS A
-JOIN (
-    SELECT CODE
-    FROM SKILLCODES
-    WHERE CATEGORY = 'Front End'
-) AS B
-ON A.SKILL_CODE & B.CODE = B.CODE
-ORDER BY ID
+FROM developers
+JOIN (SELECT code
+    FROM skillcodes
+    WHERE category = 'Front End') AS sc
+ON sc.code & developers.skill_code
+ORDER BY id
