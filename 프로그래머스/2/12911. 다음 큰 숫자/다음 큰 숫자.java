@@ -1,21 +1,22 @@
 class Solution {
     public int solution(int n) {
-        int goal = getCount(n);
-
-        while(true){
+        int count = countOne(Integer.toBinaryString(n));
+        while(n <= 1_000_000) {
             n++;
-            int count = getCount(n);
-            if(count == goal) return n;
+            if (countOne(Integer.toBinaryString(n)) == count) {
+                return n;
+            }
         }
+        return -1;
     }
-
-    int getCount(int n){
-        String binaryN = Integer.toBinaryString(n);
+    
+    int countOne(String binary) {
         int count = 0;
-        for(char c : binaryN.toCharArray()){
-            if(c == '1') count++;
+        for(char c : binary.toCharArray()) {
+            if (c == '1') {
+                count++;
+            }
         }
-
         return count;
     }
 }
