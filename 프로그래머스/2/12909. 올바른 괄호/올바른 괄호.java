@@ -1,22 +1,16 @@
-import java.util.Stack;
+import java.util.*;
 
 class Solution {
     boolean solution(String s) {
+        char[] gwalhos = s.toCharArray();
         Stack<Character> stack = new Stack<>();
-
-        for(char c : s.toCharArray()){
-            if(c==')'){
-                if(stack.isEmpty()) return false;
-                if(stack.peek()=='('){
-                    stack.pop();
-                }else{
-                    return false;
-                }
-            }else{
-                stack.add(c);
+        for(char gwalho : gwalhos) {
+            if (gwalho == ')' && !stack.isEmpty() && stack.peek() == '(') {
+                stack.pop();
+                continue;
             }
+            stack.add(gwalho);
         }
-
         return stack.isEmpty();
     }
 }
