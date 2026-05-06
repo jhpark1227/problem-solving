@@ -1,37 +1,36 @@
 import java.util.*;
 
 class Solution {
+    private int answer = 0;
+    
     public int solution(int n) {
-        int count = find(n, new ArrayList<>());
-        return count;
+        dfs(new ArrayList<>(), n);
+        return answer;
     }
     
-    int find(int n, List<Integer> list){
-        int count = 0;
-        if(n == list.size()) {
-            return 1;
+    private void dfs(List<Integer> list, int n) {
+        if (list.size() == n) {
+            answer++;
+            return;
         }
         
-        for(int i=1;i<=n;i++){
-            if(list.size() == 0) {
-                list.add(i);
-                count += find(n, list);
-                list.remove(0);
-            }else{
-                int previous = list.get(list.size()-1);
-                boolean isValid = true;
-                for(int j=0;j<list.size();j++){
-                    if(Math.abs(list.get(j) - i) == Math.abs(j - list.size()))
-                        isValid = false;
-                    if(list.get(j) == i) isValid = false;
+        for(int i=0;i<n;i++) {
+            boolean check = true;
+            for(int j=0;j<list.size();j++) {
+                if (list.get(j) == i) {
+                    check = false;
+                    break;
                 }
-                if(isValid) {
-                    list.add(i);
-                    count += find(n, list);
-                    list.remove(list.size()-1);
+                if (Math.abs(list.get(j) - i) == Math.abs(list.size() - j)) {
+                    check = false;
+                    break;
                 }
             }
+            if (check) {
+                list.add(i);
+                dfs(list, n);
+                list.remove(Integer.valueOf(i));    
+            }
         }
-        return count;
     }
 }

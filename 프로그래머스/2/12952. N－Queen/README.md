@@ -1,10 +1,10 @@
 # [level 2] N-Queen - 12952 
 
-[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/12952#qna) 
+[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/12952) 
 
 ### 성능 요약
 
-메모리: 81.5 MB, 시간: 453.60 ms
+메모리: 97 MB, 시간: 229.30 ms
 
 ### 구분
 
@@ -16,7 +16,7 @@
 
 ### 제출 일자
 
-2024년 07월 20일 15:38:17
+2026년 05월 06일 16:34:04
 
 ### 문제 설명
 
