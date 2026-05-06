@@ -1,21 +1,20 @@
 class Solution {
     public int solution(int[] arr) {
-        int max = 0;
-        long mul = 1;
-        for(int i=0;i<arr.length;i++){
-            mul *= arr[i];
-            if(arr[i] > max) max = arr[i];
+        int answer = arr[0];
+        for(int i=1;i<arr.length;i++) {
+            answer = lcm(answer, arr[i]);
         }
-        
-        int answer = 0;
-        for(int i=max; i<=mul;i++){
-            boolean isValid = true;
-            for(int j=0;j<arr.length;j++){
-                if(i % arr[j] != 0) isValid = false;
-            }
-            if(isValid) return i;
-            
+        return answer;
+    }
+    
+    private int lcm(int a, int b) {
+        return a * b / gcd(a, b);
+    }
+    
+    private int gcd(int a, int b) {
+        if (b == 0) {
+            return a;
         }
-        return 0;
+        return gcd(b, a % b);
     }
 }
