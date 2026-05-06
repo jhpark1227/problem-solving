@@ -1,12 +1,14 @@
+import java.util.*;
+
 class Solution {
     public String solution(String s) {
-        String[] numbers = s.split(" ");
-        int max = Integer.MIN_VALUE;
+        StringTokenizer st = new StringTokenizer(s);
         int min = Integer.MAX_VALUE;
-        for(int i=0;i<numbers.length;i++) {
-            int number = Integer.parseInt(numbers[i]);
-            max = Math.max(max, number);
-            min = Math.min(min, number);
+        int max = Integer.MIN_VALUE;
+        while(st.hasMoreTokens()) {
+            int x = Integer.parseInt(st.nextToken());
+            min = Math.min(min, x);
+            max = Math.max(max, x);
         }
         return min + " " + max;
     }
