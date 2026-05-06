@@ -1,17 +1,15 @@
 import java.util.*;
+import java.util.stream.*;
 
-class Solution
-{
-    public int solution(int []A, int []B)
-    {
+class Solution {
+    public int solution(int[] A, int[] B) {
         Arrays.sort(A);
         Arrays.sort(B);
-        
         int sum = 0;
-        for(int i=0;i<A.length;i++){
-            sum += A[i] * B[B.length-1-i];
+        int size = A.length;
+        for(int i = 0; i < size; i++){
+            sum += A[i] * B[size - i - 1];
         }
-        
         return sum;
     }
 }
