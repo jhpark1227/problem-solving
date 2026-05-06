@@ -1,21 +1,30 @@
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 class Solution {
+    List<int[]> answer = new ArrayList<>();
     public int[][] solution(int n) {
-        return hanoi(n, 1,3).toArray(new int[0][]);
+        move(1, 3, n);
+        int[][] arr = new int[answer.size()][2];
+        for(int i=0;i<arr.length;i++) {
+            arr[i] = answer.get(i);
+        }
+        return arr;
     }
     
-    private List<int[]> hanoi(int n, int from, int to){
-        if(n==1) return List.of(new int[]{from, to});
-        
-        int empty = 6 - from - to;
-        
-        List<int[]> result =  new ArrayList<>();
-        result.addAll(hanoi(n-1, from, empty));
-        result.addAll(hanoi(1, from, to));
-        result.addAll(hanoi(n-1,empty,to));
-        
-        return result;
+    private void move(int from, int to, int n) {
+        if (n == 1) {
+            answer.add(new int[]{from, to});
+            return;
+        }
+        boolean[] check = new boolean[4];
+        check[from] = true;
+        check[to] = true;
+        for(int i=1;i<4;i++) {
+            if(!check[i]) {
+                move(from, i, n - 1);
+                move(from, to, 1);
+                move(i, to, n - 1);
+            }
+        }
     }
 }
