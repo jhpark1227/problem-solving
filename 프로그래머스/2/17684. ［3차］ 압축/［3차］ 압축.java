@@ -1,40 +1,40 @@
 import java.util.*;
 
 class Solution {
+    private List<String> dictionary = new ArrayList<>();
+
     public int[] solution(String msg) {
-        Map<String, Integer> map = new HashMap<>();
-        for(int i=0;i<26;i++){
-            map.put((char)('A'+i)+"", i+1);
+        for(int i=(int)'A';i<=(int)'Z';i++) {
+            dictionary.add(String.valueOf((char)i));
         }
-
-        int maxValue = 27;
-        List<Integer> list = new ArrayList<>();
-        int idx = 0;
-        while(true){
-            String key = "";
-            String newKey = "";
-            for(int len=1;len<=msg.length()-idx;len++){
-                String s = msg.substring(idx, idx+len);
-                if(map.containsKey(s)){
-                    key = s;
-                }else{
-                    newKey = s;
-                    break;
+        List<Integer> answer = new ArrayList<>();
+        while(!msg.isEmpty()) {
+            for(int i=msg.length();i>=0;i--) {
+                String substring = msg.substring(0, i);
+                int index = findDictionary(substring);
+                if (index == -1) continue;
+                answer.add(index);
+                msg = msg.substring(i);
+                if (!msg.isEmpty()) {
+                    dictionary.add(substring + msg.charAt(0));
                 }
+                break;
             }
-            list.add(map.get(key));
-            map.put(newKey, maxValue);
-            maxValue++;
-            idx+=key.length();
-           
-            if(idx == msg.length()) break;
         }
-
-        int[] answer = new int[list.size()];
-        for(int i=0;i<list.size();i++){
-            answer[i] = list.get(i);
+        
+        int[] arr = new int[answer.size()];
+        for(int i=0;i<arr.length;i++) {
+            arr[i] = answer.get(i);
         }
-
-        return answer;
+        return arr;
+    }
+    
+    private int findDictionary(String msg) {
+        for(int i=0;i<dictionary.size() ;i++) {
+            if (dictionary.get(i).equals(msg)) {
+                return i + 1;
+            }
+        }
+        return -1;
     }
 }
