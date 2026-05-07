@@ -4,40 +4,42 @@ class Solution {
     public int solution(String str1, String str2) {
         str1 = str1.toLowerCase();
         str2 = str2.toLowerCase();
-        
-        Map<String, Integer> map1 = new HashMap<>();
-        Map<String, Integer> map2 = new HashMap<>();
-        int union = 0;
-        for(int i=0;i<str1.length()-1;i++){
-            String s = str1.substring(i, i+2);
-            if(s.charAt(0) < 'a' || s.charAt(0) > 'z' || s.charAt(1) < 'a' || s.charAt(1) > 'z') continue;
-            map1.put(s, map1.getOrDefault(s, 0)+1);
-        }
-        for(int i=0;i<str2.length()-1;i++){
-            String s = str2.substring(i, i+2);
-            if(s.charAt(0) < 'a' || s.charAt(0) > 'z' || s.charAt(1) < 'a' || s.charAt(1) > 'z') continue;
-            map2.put(s, map2.getOrDefault(s, 0)+1);
-        }
-        
-        int common = 0;
-        for(String key : map1.keySet()){
-            if(map2.keySet().contains(key)){
-                common += Math.min(map1.get(key), map2.get(key));
-                union += Math.max(map1.get(key), map2.get(key));
-            }else
-                union += map1.get(key);
-        }
-        for(String key : map2.keySet()){
-            if(!map1.keySet().contains(key)){
-                union += map2.get(key);
+        Map<String, Integer> a = createMap(str1);
+        Map<String, Integer> b = createMap(str2);
+        Map<String, Integer> x = new HashMap<>();
+        Map<String, Integer> y = new HashMap<>();
+        for(String key : a.keySet()) {
+            if (b.keySet().contains(key)) {
+                x.put(key, Math.min(a.get(key), b.get(key)));
+                y.put(key, Math.max(a.get(key), b.get(key)));
+                continue;
             }
+            y.put(key, a.get(key));
         }
-        
-        if(union == 0){
-            union = 1;
-            common = 1;
+        for(String key : b.keySet()) {
+            if (a.keySet().contains(key)) {
+                continue;
+            }
+            y.put(key, b.get(key));
         }
-        
-        return (int)Math.floor((double)common / union * 65536);
+        int xCount = x.values().stream().mapToInt(i->i).sum();
+        int yCount = y.values().stream().mapToInt(i->i).sum();
+        if (yCount == 0) {
+            return 65536;
+        }
+        return (int)((double)xCount / yCount * 65536);
+    }
+    
+    private Map<String, Integer> createMap(String a) {
+        Map<String, Integer> map = new HashMap<>();
+        for(int i=0;i<a.length()-1;i++) {
+            char first = a.charAt(i);
+            char second = a.charAt(i + 1);
+            if (first < 'a' || first > 'z' || second < 'a' || second > 'z') {
+                continue;
+            }
+            map.merge(a.substring(i, i + 2), 1, (x, y) -> x + y);
+        }
+        return map;
     }
 }
