@@ -1,46 +1,59 @@
+import java.util.*;
+
 class Solution {
     public String solution(String m, String[] musicinfos) {
-        m = m.replace("A#", "H")
-            .replace("B#", "I")
-            .replace("C#", "J")
-            .replace("D#", "K")
-            .replace("F#", "L")
-            .replace("G#", "M");
-        int maxTime = 0;
-        String title = "";
-        for(String musicinfo : musicinfos){
-            String[] musicinfoArr = musicinfo.split(",");
-            
-            String melody = musicinfoArr[3];
-            melody = melody.replace("A#", "H")
-                .replace("B#", "I")
-                .replace("C#", "J")
-                .replace("D#", "K")
-                .replace("F#", "L")
-                .replace("G#", "M");
-            
-            int startH = Integer.parseInt(musicinfoArr[0].split(":")[0]);
-            int startM = Integer.parseInt(musicinfoArr[0].split(":")[1]);
-            int endH = Integer.parseInt(musicinfoArr[1].split(":")[0]);
-            int endM = Integer.parseInt(musicinfoArr[1].split(":")[1]);
-            
-            int time = (endH-startH) * 60 + endM-startM;
-            String radio = "";
-            for(int i=0;i<time / melody.length();i++){
-                radio += melody;
-            }
-            for(int i=0;i<time % melody.length();i++){
-                radio += melody.charAt(i);
-            }
-            
-            if(radio.contains(m) || m.contains(radio)){
-                if(time > maxTime){
-                    maxTime = time;
-                    title = musicinfoArr[2];
+        m = convert(m);
+        List<Music> correctMusics = new ArrayList<>();
+        for(String infos : musicinfos) {
+            String[] infoArr = infos.split(",");
+            String rawStartTime = infoArr[0];
+            int startTime = Integer.parseInt(rawStartTime.split(":")[0]) * 60 + Integer.parseInt(rawStartTime.split(":")[1]);
+            String rawEndTime = infoArr[1];
+            int endTime = Integer.parseInt(rawEndTime.split(":")[0]) * 60 + Integer.parseInt(rawEndTime.split(":")[1]);
+            String title = infoArr[2];
+            String melody = convert(infoArr[3]);
+            String allMelody = "";
+            int index = 0;
+            for(int i=startTime;i<=endTime;i++) {
+                String now = String.valueOf(melody.charAt(index));
+                if(index != melody.length() -1 && melody.charAt(index + 1) == '#') {
+                    index++;
+                    now += melody.charAt(index);
                 }
+                allMelody += now;
+                index++;
+                if (index == melody.length()) index = 0;
+            }
+            if (allMelody.contains(m)) {
+                correctMusics.add(new Music(endTime - startTime, title, startTime));
             }
         }
+        correctMusics.sort((a, b) -> a.duration == b.duration ? a.startTime - b.startTime : b.duration - a.duration);
+        if (correctMusics.isEmpty()) {
+            return "(None)";
+        }
+        return correctMusics.get(0).title;
+    }
+    
+    private static class Music {
+        int duration;
+        String title;
+        int startTime;
         
-        return title==""?"(None)":title;
+        Music(int duration, String title, int startTime) {
+            this.duration = duration;
+            this.title = title;
+            this.startTime = startTime;
+        }
+    }
+    
+    private String convert(String origin) {
+        origin = origin.replace("C#", "H");
+        origin = origin.replace("D#", "I");
+        origin = origin.replace("F#", "J");
+        origin = origin.replace("G#", "K");
+        origin = origin.replace("A#", "J");
+
+        return origin;
     }
 }
