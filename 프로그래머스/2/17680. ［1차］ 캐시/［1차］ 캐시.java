@@ -1,25 +1,26 @@
 import java.util.*;
+import java.util.stream.*;
 
 class Solution {
     public int solution(int cacheSize, String[] cities) {
-        Queue<String> q = new LinkedList<>();
-        int time = 0;
-        for(String city : cities){
-            city = city.toLowerCase();
-            if(q.contains(city)){
-                time += 1;    
-                q.remove(city);
-                q.add(city);
-            }else{
-                time += 5;
-                if(cacheSize != 0){
-                    if(q.size() >= cacheSize){
-                        q.poll();
-                    }
-                    q.add(city);
-                }
+        cities = Arrays.stream(cities).map(i -> i.toLowerCase()).toArray(String[]::new);
+        List<String> cache = new ArrayList<>();
+        int answer = 0;
+        for(String city : cities) {
+            if (cache.contains(city)) {
+                answer += 1;
+                cache.remove(city);
+                cache.add(city);
+                continue;
             }
+            if (cacheSize > 0) {
+                if (!cache.isEmpty() && cacheSize == cache.size()) {
+                    cache.remove(0);   
+                }
+                cache.add(city);    
+            }
+            answer+=5;
         }
-        return time;
+        return answer;
     }
 }
