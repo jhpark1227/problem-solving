@@ -1,13 +1,22 @@
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class Solution {
-    public int[] solution(int []arr) {
-        List<Integer> list = new ArrayList<>();
-        list.add(arr[0]);
-        for(int i=1;i<arr.length;i++){
-            if(arr[i-1] != arr[i]) list.add(arr[i]);
+    public int[] solution(int[] arr) {
+        Stack<Integer> stack = new Stack<>();
+        for(int x : arr) {
+            if (stack.isEmpty()) {
+                stack.add(x);
+                continue;
+            }
+            if (stack.peek() == x) {
+                continue;
+            }
+            stack.add(x);
         }
-        return list.stream().mapToInt(i->i).toArray();
+        List<Integer> answer = new ArrayList<>();
+        while(!stack.isEmpty()) {
+            answer.add(stack.pop());
+        }
+        return answer.reversed().stream().mapToInt(i->i).toArray();
     }
 }
