@@ -1,21 +1,22 @@
 import java.util.*;
 
 class Solution {
-    public int solution(int[] scoville, int K) {
-        PriorityQueue<Integer> heap = 
-            new PriorityQueue<>();
-        
-        for(int i:scoville) heap.add(i);
-                
-        int count = 0;
-        while(heap.peek() < K && heap.size() >= 2){
-            int a = heap.poll();
-            int b = heap.poll();
-            heap.add(a + b * 2);
-            count++;
+    public int solution(int[] scovilles, int K) {
+        PriorityQueue<Integer> pq = new PriorityQueue<>((a,b) -> a - b);
+        for(int scoville : scovilles) {
+            pq.add(scoville);
+        }
+        int answer = 0;
+        while(pq.peek() < K) {
+            if (pq.size() < 2) {
+                return -1;
+            }
+            int first = pq.poll();
+            int second = pq.poll();
+            pq.add(first + second * 2);
+            answer++;
         }
         
-        if(heap.peek() < K) return -1;
-        return count;
+        return answer;
     }
 }
