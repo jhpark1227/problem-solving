@@ -1,33 +1,35 @@
+import java.util.*;
+
 class Solution {
     public int solution(int n, int[] lost, int[] reserve) {
-        boolean[] losted = new boolean[n + 1];
-        boolean[] reserved = new boolean[n + 1];
-        for(int i=0;i<lost.length;i++) {
-            losted[lost[i]] = true;
+        int[] students = new int[n + 1];
+        Arrays.fill(students, 1);
+        students[0] = 0;
+        for(int l : lost) {
+            students[l]--;
         }
-        for(int i=0;i<reserve.length;i++) {
-            if(losted[reserve[i]]) {
-                losted[reserve[i]] = false;
-                continue;
-            }
-            reserved[reserve[i]] = true;
+        for(int r : reserve) {
+            students[r]++;
         }
         
         for(int i=1;i<=n;i++) {
-            if (reserved[i]) {
-                if(losted[i - 1]) {
-                    losted[i - 1] = false;
-                    continue;
-                }
-                if(i + 1 < losted.length && losted[i + 1]) {
-                    losted[i + 1] = false;
-                }
+            if (students[i] > 0) {
+                continue;
+            }    
+            if (students[i - 1] > 1) {
+                students[i - 1]--;
+                students[i]++;
+            } else if (i < n && students[i + 1] > 1){
+                students[i + 1]--;
+                students[i]++;
             }
         }
-        int count = 0;
-            for(int i=1;i<losted.length;i++) {
-                if (!losted[i]) count++;
-            }
-        return count;
+        
+        int answer = 0;
+        for(int i=1;i<students.length;i++) {
+            if (students[i] > 0) answer++;
+        }
+        
+        return answer;
     }
 }
