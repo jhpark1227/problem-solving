@@ -1,17 +1,16 @@
 class Solution {
-    int result = 0;
     public int solution(int[] numbers, int target) {
-        dfs(numbers, 0, 0, target);
-        return result;
+        return dfs(numbers, 0, 0, target);
     }
-
-    void dfs(int[] numbers, int index, int num, int target){
-        if(index == numbers.length) {
-            if(num == target) result++;
-            return;
+    
+    private int dfs(int[] numbers, int index, int value, int target) {
+        int n = numbers[index];
+        if (index == numbers.length - 1) {
+            if (value + n == target || value - n == target) {
+                return 1;
+            }   
+            return 0;
         }
-
-        dfs(numbers, index+1, num+numbers[index], target);
-        dfs(numbers, index+1, num-numbers[index], target);
+        return dfs(numbers, index + 1, value + n, target) + dfs(numbers, index + 1, value - n, target);
     }
 }
