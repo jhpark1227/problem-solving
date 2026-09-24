@@ -1,24 +1,29 @@
 class Solution {
+    private static final long MAX = 1_000_000_000;
+    
     public long solution(int n, int[] times) {
-        long start = 0;
-        long end = 1000000000000000000L;
-        while(start<end){
-            long t = (start+end)/2;
-            if(isValid(times, n, t)){
-                end = t;
-            }else{
-                start = t+1;
+        return binarySearch(n, times);
+    }
+    
+    private long binarySearch(int n, int[] times) {
+        long left = 0;
+        long right = MAX * MAX;
+        while(left < right) {
+            long mid = (left + right) / 2;
+            if (isPossible(n, mid, times)) {
+                right = mid;
+            } else {
+                left = mid + 1;
             }
         }
-        
-        return start;
+        return left;
     }
-
-    private boolean isValid(int[] times, int n, long time){
+    
+    private boolean isPossible(int n, long limit, int[] times) {
         long sum = 0;
-        for(int t:times){
-            sum += time/t;
+        for(int time : times) {
+            sum += limit / time;
         }
-        return sum>=n;
+        return sum >= n;
     }
 }
