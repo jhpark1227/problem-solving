@@ -1,31 +1,26 @@
 import java.util.*;
-import java.util.stream.Collectors;
 
 class Solution {
     public int[] solution(int[] progresses, int[] speeds) {
-        Queue<Integer> queue = new LinkedList<>(Arrays.stream(progresses).boxed().collect(Collectors.toList()));
-        List<Integer> answer = new ArrayList<>();
-
-        int day = 0;
         int index = 0;
-        while(true){
-            day++;
-            int count = 0;
-            while(queue.peek()+speeds[index]*day>=100){
-                count++;
-                queue.poll();
-                index++;
-                if(queue.isEmpty()) break;
+        List<Integer> answer = new ArrayList<>();
+        while(index < progresses.length) {
+            int date = (100 - progresses[index]) / speeds[index];
+            if ((100 - progresses[index]) % speeds[index] != 0) date++;
+            for(int i=0;i<progresses.length;i++) {
+                progresses[i] += speeds[i] * date;
             }
-            if(count!=0) answer.add(count);
-            if(queue.isEmpty()) break;
+            int count = 0;
+            for(int i=index;i<progresses.length;i++) {
+                if (progresses[i] >= 100) {
+                    count++;
+                    index++;
+                } else {
+                    break;
+                }
+            }
+            answer.add(count);
         }
-
-        int[] result = new int[answer.size()];
-        for(int i=0;i<result.length;i++){
-            result[i] = answer.get(i);
-        }
-
-        return result;
+        return answer.stream().mapToInt(i->i).toArray();
     }
 }
