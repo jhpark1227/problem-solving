@@ -1,51 +1,58 @@
 import java.util.*;
 
 class Solution {
-    public int solution(int n, int[][] edges) {
-        Map<Integer, List<Integer>> map = new HashMap<>();
-        for(int[] edge : edges){
-            if(!map.containsKey(edge[0])) map.put(edge[0], new ArrayList<>());
-            if(!map.containsKey(edge[1])) map.put(edge[1], new ArrayList<>());
-            
-            map.get(edge[0]).add(edge[1]);
-            map.get(edge[1]).add(edge[0]);
+    public int solution(int n, int[][] edge) {
+        List<Integer>[] graph = new List[n+1];
+        for(int i=0;i<graph.length;i++) {
+            graph[i] = new ArrayList<>();
         }
-        int[] distance = new int[map.size()+1];
-        bfs(map, distance);
-        
-        Arrays.sort(distance);
-        int max = distance[distance.length-1];
-        int answer = 0;
-        for(int i=distance.length-1;i>=0;i--){
-            if(max == distance[i]) answer++;
-            else break;
+        for(int[] e : edge) {
+            graph[e[0]].add(e[1]);
+            graph[e[1]].add(e[0]);
         }
-        
-        return answer;
-    }
-    
-    void bfs(Map<Integer,List<Integer>> map, int[] distance){
-        Queue<Node> q = new LinkedList<>();
-        boolean[] isVisited = new boolean[map.size()+1];
-        q.add(new Node(1, 0));
-        isVisited[1] = true;
-        while(!q.isEmpty()){
-            Node now = q.poll();
-            distance[now.num] = now.depth;
-            for(int i=0;i<map.get(now.num).size();i++){
-                int node = map.get(now.num).get(i);
-                if(!isVisited[node]){
-                    q.add(new Node(node, now.depth+1));
-                    isVisited[node] = true;
-                }
+        int max = 0;
+        int maxCount = 1;
+        int[] dist = bfs(graph);
+        for(int i=2;i<dist.length;i++) {
+            if (dist[i] > max) {
+                max = dist[i];
+                maxCount = 1;
+                continue;
+            }
+            if (dist[i] ==max) {
+                maxCount++;
+                continue;
             }
         }
+        return maxCount;
     }
-    class Node{
-        int num;
+    
+    private int[] bfs(List<Integer>[] graph) {
+        Queue<Node> q = new LinkedList<>();
+        q.add(new Node(1, 0));
+        boolean[] isVisited = new boolean[graph.length];
+        isVisited[1] = true;
+        int[] distances = new int[graph.length];
+        Arrays.fill(distances, Integer.MAX_VALUE);
+        
+        while(!q.isEmpty()) {
+            Node now = q.poll();
+            distances[now.value] = now.depth;
+            for(int next : graph[now.value]) {
+                if (isVisited[next]) continue;
+                q.add(new Node(next, now.depth + 1));
+                isVisited[next] = true;
+            }
+        }
+        return distances;
+    }
+    
+    private static class Node {
+        int value;
         int depth;
-        Node(int num, int depth){
-            this.num = num;
+        
+        private Node(int value, int depth) {
+            this.value = value;
             this.depth = depth;
         }
     }
