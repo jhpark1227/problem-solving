@@ -1,27 +1,19 @@
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.stream.Collectors;
+import java.util.*;
 
 class Solution {
     public String solution(int[] numbers) {
-        String[] arr = new String[numbers.length];
-
-        for(int i=0;i<numbers.length;i++){
-            arr[i] = String.valueOf(numbers[i]);
-        }
-
-        Arrays.sort(arr, new Comparator<String>() {
-            @Override
-            public int compare(String o1, String o2) {
-                return Integer.parseInt(o2+o1) - Integer.parseInt(o1+o2);
-            }
+        List<String> strs = new ArrayList(Arrays.stream(numbers)
+            .boxed()
+            .map(String::valueOf)
+            .toList());
+        strs.sort((a, b) -> {
+            String strA = String.valueOf(a);
+            String strB = String.valueOf(b);
+            return (strB+strA).compareTo(strA+strB);
         });
-        StringBuilder sb = new StringBuilder();
-        Arrays.stream(arr).forEach(x->sb.append(x));
-
-        if(Arrays.stream(arr).filter(x->x.equals("0")).collect(Collectors.toList()).size()==numbers.length){
+        if (strs.get(0).equals("0")) {
             return "0";
         }
-        return sb.toString();
+        return strs.stream().reduce("", String::concat);
     }
 }
