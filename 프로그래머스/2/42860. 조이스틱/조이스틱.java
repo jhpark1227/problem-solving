@@ -1,23 +1,19 @@
-import java.util.*;
-
 class Solution {
     public int solution(String name) {
-        int n = name.length();
-        
-        int LRMove = name.length() - 1;
-        int TDMove = 0;
-        
-        for(int x=0;x<n;x++){
-            TDMove += Math.min(name.charAt(x) - 'A', 'Z'-name.charAt(x)+1);
-            
-            int y = x+1;
-            while(y < n && name.charAt(y) == 'A'){
-                y++;
-            }
-            
-            LRMove = Math.min(LRMove, Math.min(x*2+(n-y), (n-y)*2+x));
+        int upDownCount = 0;
+        for(int i=0;i<name.length();i++) {
+            char c = name.charAt(i);
+            upDownCount += Math.min(c - 'A', 'Z' - c + 1);
         }
-        
-       return LRMove + TDMove;
+        int leftRightCount = Integer.MAX_VALUE;
+        int n = name.length();
+        for(int i=0;i<n;i++) {
+            int x = i + 1;
+            while(x < n && name.charAt(x) == 'A') {
+                x++;
+            }
+            leftRightCount = Math.min(leftRightCount, Math.min(i*2 + (n - x), i + 2 * (n - x)));
+        }
+        return upDownCount + leftRightCount;
     }
 }
