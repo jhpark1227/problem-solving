@@ -13,8 +13,7 @@ class Solution {
     private int binarySearch(int left, int right, List<Integer> rocks, int n) {
         while(left < right) {
             int mid = (left + right + 1) / 2;
-            boolean check = temp(mid, new ArrayList<>(rocks), n);
-            if (check) {
+            if (temp(mid, rocks, n)) {
                 left = mid;
             } else {
                 right = mid - 1;
@@ -26,18 +25,15 @@ class Solution {
     private boolean temp(int mid, List<Integer> rocks, int n) {
         int count = 0;
         int index = 1;
+        int prev = rocks.get(0);
         while (index < rocks.size()) {
-            int distance = rocks.get(index) - rocks.get(index - 1);
+            int distance = rocks.get(index) - prev;
             if (distance < mid) {
-                if (index == rocks.size() - 1) {
-                    rocks.remove(index - 1);
-                } else {
-                    rocks.remove(index);   
-                }
                 count++;
             } else {
-                index++;
+                prev = rocks.get(index);
             }
+            index++;
         }
         if (count > n) {
             return false;
