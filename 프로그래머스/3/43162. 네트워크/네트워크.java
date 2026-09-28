@@ -1,39 +1,37 @@
 import java.util.*;
 
 class Solution {
+    
+    private boolean[] isVisited;
+    
     public int solution(int n, int[][] computers) {
-        List[] graph = new List[n];
-        for(int i=0;i<n;i++){
+        List<Integer>[] graph = new List[n];
+        isVisited = new boolean[n];
+        for(int i=0;i<graph.length;i++) {
             graph[i] = new ArrayList<>();
         }
-        
-        for(int i=0;i<computers.length;i++){
-            for(int j=0;j<computers[0].length;j++){
-                if(computers[i][j] == 1){
-                    graph[i].add(j);
-                    graph[j].add(i);
-                }
+        for(int i=0;i<n;i++) {
+            for(int j=0;j<n;j++) {
+                if (computers[i][j] == 0) continue;
+                graph[i].add(j);
+                graph[j].add(i);
             }
         }
-        
         int count = 0;
-        boolean[] isVisited = new boolean[n];
-        for(int i=0;i<n;i++){
-            if(!isVisited[i]){
-                dfs(graph, isVisited, i);
-                count++;
-            }
+        for(int i=0;i<n;i++) {
+            if (isVisited[i]) continue;
+            dfs(graph, i);
+            count++;
         }
         
         return count;
     }
     
-    void dfs(List[] graph, boolean[] isVisited, int now){
-        for(int i=0;i<graph[now].size();i++){
-            if(!isVisited[(int)graph[now].get(i)]){
-                isVisited[(int)graph[now].get(i)] = true;
-                dfs(graph, isVisited, (int)graph[now].get(i));
-            }
+    private void dfs(List<Integer>[] graph, int current) {
+        isVisited[current] = true;
+        for(int next : graph[current]) {
+            if (isVisited[next]) continue;
+            dfs(graph, next);
         }
     }
 }
