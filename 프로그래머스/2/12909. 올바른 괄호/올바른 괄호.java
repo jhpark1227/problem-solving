@@ -2,14 +2,17 @@ import java.util.*;
 
 class Solution {
     boolean solution(String s) {
-        char[] gwalhos = s.toCharArray();
         Stack<Character> stack = new Stack<>();
-        for(char gwalho : gwalhos) {
-            if (gwalho == ')' && !stack.isEmpty() && stack.peek() == '(') {
+        for(char c : s.toCharArray()) {
+            if(stack.isEmpty()) {
+                stack.add(c);
+                continue;
+            }
+            if (stack.peek() == '(' && c == ')') {
                 stack.pop();
                 continue;
             }
-            stack.add(gwalho);
+            stack.add(c);
         }
         return stack.isEmpty();
     }
