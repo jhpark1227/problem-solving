@@ -3,16 +3,14 @@ import java.util.*;
 class Solution {
     public boolean solution(String[] phone_book) {
         Set<String> set = new HashSet<>();
-        for(String num : phone_book){
-            set.add(num);
-        }
-
-        for(String num : phone_book){
-            for(int i=0;i<num.length();i++){
-                if(set.contains(num.substring(0,i))){
-                    return false;
-                }
+        for(String phone : phone_book) {
+            phone = phone.replace(" ", "");
+            for(int i=1;i<phone.length();i++) {
+                set.add(phone.substring(0, i));
             }
+        }
+        for(String phone : phone_book) {
+            if (set.contains(phone.replace(" ", ""))) return false;
         }
         return true;
     }
