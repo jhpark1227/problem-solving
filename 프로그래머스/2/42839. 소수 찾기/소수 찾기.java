@@ -1,35 +1,35 @@
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.*;
 
-public class Solution {
-    public int solution(String nums) {
-        List<Integer> numbers = nums.chars().map(c->c-'0').boxed().collect(Collectors.toList());
-
-        return getPrimes(0, numbers).size();
+class Solution {
+    
+    private Set<Integer> set = new HashSet<>();
+    
+    public int solution(String numbersStr) {
+        List<Integer> numbers = numbersStr.chars()
+            .map(i -> (int)i - '0')
+            .boxed()
+            .toList();
+        dfs(numbers, new boolean[numbers.size()], 0);
+        return set.size();
     }
-
-    private boolean isPrime(int x){
-        if(x <= 1) return false;
-        for(int i=2; i * i <= x; i++){
-            if(x % i == 0) return false;
+    
+    private boolean isPrime(int number) {
+        if (number == 0 || number == 1) return false;
+        for(int i=2;i<=(int)Math.sqrt(number);i++) {
+            if (number % i == 0) return false;
         }
         return true;
     }
 
-    private Set<Integer> getPrimes(int acc, List<Integer> numbers){
-        Set<Integer> primes = new HashSet<>();
-        if(isPrime(acc)) primes.add(acc);
-
-        for(int i=0; i < numbers.size(); i++){
-            int nextAcc = 10 * acc + numbers.get(i);
-            List<Integer> nextNumbers = new ArrayList<>(numbers);
-            nextNumbers.remove(i);
-            primes.addAll(getPrimes(nextAcc, nextNumbers));
+    private void dfs(List<Integer> numbers, boolean[] isVisited, int now) {
+        if(isPrime(now)) {
+            set.add(now);
         }
-
-        return primes;
+        for(int i=0;i<numbers.size();i++) {
+            if(isVisited[i]) continue;
+            isVisited[i] = true;
+            dfs(numbers, isVisited, now * 10 + numbers.get(i));
+            isVisited[i] = false;
+        }
     }
 }
