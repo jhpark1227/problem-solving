@@ -25,11 +25,11 @@ class Solution {
             }
         }
         
-        int answer = 0;
+        int result = 0;
         for(int i=1;i<students.length;i++) {
-            if (students[i] > 0) answer++;
+            if (students[i] > 0) result++;
         }
         
-        return answer;
+        return result;
     }
 }
