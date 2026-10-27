@@ -1,29 +1,30 @@
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.*;
 
 class Solution {
     public int solution(int[] priorities, int location) {
-        Queue<Integer> q = new LinkedList<>();
-        for(int i=0;i<priorities.length;i++){
-            q.add(i);
-        }
-
-        int count = 0;
-        while(!q.isEmpty()){
-            int now = q.peek();
-
-            boolean isTop = true;
-            for(int i=0;i<priorities.length;i++){
-                if(priorities[i] > priorities[now] && q.contains(i)){
-                    isTop = false;
+        List<Integer> list = Arrays.stream(priorities)
+            .boxed()
+            .toList();
+        PriorityQueue<Integer> pq = new PriorityQueue<>(Comparator.reverseOrder());
+        pq.addAll(list);
+        Queue<Integer> q = new LinkedList<>(list);
+        int count = 1;
+        while(!q.isEmpty()) {
+            int now = q.poll();
+            if (pq.peek() == now) {
+                if (location == 0) {
+                    break;
                 }
-            }
-            if(!isTop){
-                q.add(q.poll());
-            } else{
+                pq.poll();
                 count++;
-                int n = q.poll();
-                if(n == location) return count;
+                location--;
+                continue;
+            }
+            q.add(now);
+            if (location == 0) {
+                location = q.size() - 1;
+            } else {
+                location--;
             }
         }
         return count;
